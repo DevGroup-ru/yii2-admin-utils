@@ -1,0 +1,38 @@
+{
+    "name": "devgroup/yii2-admin-utils",
+    "description": "Various admin panel utilities for yii2",
+    "type": "yii2-extension",
+    "keywords": ["yii2","extension","admin"],
+    "license": "MIT",
+    "minimum-stability": "dev",
+    "authors": [
+        {
+            "name": "Alexander Kozhevnikov",
+            "email": "b37hr3z3n@gmail.com"
+        }
+    ],
+    "require": {
+        "yiisoft/yii2": "^2.0.6",
+        "devgroup/yii2-tag-dependency-helper": "^1.3.0",
+        "unclead/yii2-multiple-input": "~1.2.5",
+        "devgroup/yii2-multilingual": "*",
+	"kartik-v/yii2-icons": "~1.4.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "~4.0",
+        "phpunit/dbunit": "~1.0",
+        "yiisoft/yii2-debug": "^2.0@dev",
+        "yiisoft/yii2-gii": "^2.0@dev",
+        "yiisoft/yii2-bootstrap": "^2.0@dev"
+    },
+    "autoload": {
+        "psr-4": {
+            "DevGroup\\AdminUtils\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "DevGroup\\AdminUtils\\Tests\\": "tests/"
+        }
+    }
+}
