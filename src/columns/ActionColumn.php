@@ -129,7 +129,10 @@ class ActionColumn extends Column
             Html::addCssClass($button, $this->buttonSizeClass);
 
             $buttonText = isset($button['text']) ? ' ' . $button['text'] : '';
-            $icon = empty($button['icon']) ? '' : Icon::show($button['icon']) . '&nbsp;';
+            $icon = empty($button['icon']) ? '' : Icon::show($button['icon']);
+            if (!empty($icon) && !empty($buttonText)) {
+                $buttonText = '&nbsp;' . $buttonText;
+            }
 
             $data .= Html::a(
                 $icon . $buttonText,
