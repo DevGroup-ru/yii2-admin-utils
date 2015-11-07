@@ -49,7 +49,7 @@ class ActionColumn extends Column
                 'options' => [
                     'data-action' => 'delete',
                 ],
-            ]
+            ],
         ];
 
 
@@ -65,7 +65,6 @@ class ActionColumn extends Column
      * @param string               $action          the button name (or action ID)
      * @param \yii\db\ActiveRecord $model           the data model
      * @param mixed                $key             the key associated with the data model
-     * @param integer              $index           the current row index
      * @param bool                 $appendReturnUrl custom return url for each button
      * @param array                $urlAppend       custom append url for each button
      * @param string               $keyParam        custom param if $key is string
@@ -75,7 +74,7 @@ class ActionColumn extends Column
      */
     public function createUrl(
         $action,
-        \yii\db\ActiveRecord $model,
+        $model,
         $key,
         $appendReturnUrl,
         $urlAppend,
@@ -122,7 +121,7 @@ class ActionColumn extends Column
         $data = Html::beginTag('div', ['class' => 'btn-group']);
         foreach ($this->buttons as $button) {
             $appendReturnUrl = ArrayHelper::getValue($button, 'appendReturnUrl', $this->appendReturnUrl);
-            $urlAppend = ArrayHelper::getValue($button, 'urlAppend', $this->url_append);
+            $urlAppend = ArrayHelper::getValue($button, 'urlAppend', $this->appendUrlParams);
             $keyParam = ArrayHelper::getValue($button, 'keyParam', 'id');
             $attrs = ArrayHelper::getValue($button, 'attrs', []);
 
@@ -134,7 +133,7 @@ class ActionColumn extends Column
 
             $data .= Html::a(
                 $icon . $buttonText,
-                $url = $this->createUrl(
+                $this->createUrl(
                     $button['url'],
                     $model,
                     $key,
