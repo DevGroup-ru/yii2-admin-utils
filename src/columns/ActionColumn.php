@@ -103,7 +103,7 @@ class ActionColumn extends Column
         if ($appendReturnUrl) {
             $params['returnUrl'] = Helper::returnUrl();
         }
-        return Url::toRoute($params) . $urlAppend;
+        return Url::toRoute($params);
 
     }
 
