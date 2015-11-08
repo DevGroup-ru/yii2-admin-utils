@@ -15,7 +15,10 @@ class Helper
     private static $returnUrl = null;
 
     /**
-     * @return string returnURL param value
+     * returnURL param value.
+     * Used for links from grids and etc. where we should return back to specified URL
+     *
+     * @return string
      */
     public static function returnUrl()
     {
