@@ -7,7 +7,6 @@
 
 // Load pluginsconst
 const gulp = require('gulp');
-const babel = require('gulp-babel');
 const sass = require('gulp-sass');
 const sourcemaps = require('gulp-sourcemaps');
 const autoprefixer = require('gulp-autoprefixer');
@@ -19,7 +18,6 @@ const rename = require('gulp-rename');
 const concat = require('gulp-concat');
 const cache = require('gulp-cache');
 const scsslint = require('gulp-scss-lint');
-const del = require('del');
 
 const browserify = require('browserify');
 const watchify = require('watchify');
@@ -33,10 +31,31 @@ const buffer = require('vinyl-buffer');
 const debowerify = require('debowerify');
 
 var config = {
-  entryFile: './js/app.js',
-  outputDir: './../dist/scripts/',
+  cleanOutputDir: './../dist/',
+  scriptsOutputDir: './../dist/scripts/',
+  stylesOutputDir: './../dist/styles/',
+  imagesOutputDir: './../dist/images/',
+
   outputFile: 'app.js',
+
   watchJsFilesMask: ['js/*.js', 'js/*/*.js'],
+  entryFile: 'js/app.js',
+
+  watchSassFilesMask: ['sass/*/*.scss', 'sass/*.scss'],
+  lintSassFilesMask: [
+    'sass/*/*.scss',
+    'sass/*.scss',
+    '!sass/utils/_singularitygs.scss',
+    '!sass/utils/normalize.scss',
+  ],
+  compileSassFilesMask: ['sass/*.scss'],
+
+  libsCssFilesMask: ['libs/*.css'],
+  libsJsFilesMask: ['libs/*.js'],
+  libsOutputCssFile: 'libs.css',
+  libsOutputJsFile: 'libs.js',
+
+  imagesMask: ['images/*'],
 };
 
 var bundler;
@@ -54,23 +73,26 @@ function bundle() {
     .on('error', function(err) {
       console.log('Error: ' + err.message, err);
     })
+
     .pipe(source(config.outputFile))
-    .pipe(gulp.dest(config.outputDir))
+    .pipe(sourcemaps.write())
+    .pipe(gulp.dest(config.scriptsOutputDir))
     .pipe(reload({ stream: true }))
+    // uglify
     .pipe(buffer())
     .pipe(sourcemaps.init({loadMaps: true}))
     .pipe(uglify())
-    .pipe(sourcemaps.write())
-    .pipe(gulp.dest(config.outputDir+'min/'))
+    .pipe(rename({suffix: '.min'}))
+    .pipe(gulp.dest(config.scriptsOutputDir))
     .pipe(reload({ stream: true }));
 }
 
 
 // clean the scripts output directory
-gulp.task('clean-scripts', function(cb) {
-  rimraf(config.outputDir, cb);
+gulp.task('clean', function(cb) {
+  rimraf(config.cleanOutputDir, cb);
 });
-gulp.task('build-persistent', ['clean-scripts'], function() {
+gulp.task('build-persistent', function() {
   return bundle();
 });
 
@@ -78,12 +100,12 @@ gulp.task('build', ['build-persistent'], function() {
   process.exit(0);
 });
 
-gulp.task('watch', ['build-persistent'], function() {
+gulp.task('watch', ['default'], function() {
 
   browserSync({
     open: false,
     server: {
-      baseDir: './'
+      baseDir: '../'
     },
     socket: {
       domain: 'localhost:3000'//,
@@ -94,33 +116,37 @@ gulp.task('watch', ['build-persistent'], function() {
     },
     port: 3000
   });
-  gulp.watch('sass/*.scss', ['styles']);
-  gulp.watch(config.watchJsFilesMask, ['libs-scripts']);
-  gulp.watch('libs/*.css', ['libs-styles']);
-  gulp.watch('images/*', ['images']);
-
+  gulp.watch(config.watchSassFilesMask, ['styles']);
+  gulp.watch(config.libsJsFilesMask, ['libs-scripts']);
+  gulp.watch(config.libsCssFilesMask, ['libs-styles']);
+  gulp.watch(config.lintSassFilesMask, ['styles-lint']);
+  gulp.watch(config.imagesMask, ['images']);
   getBundler().on('update', function() {
     console.log('update event');
     gulp.start('build-persistent');
     gulp.start('scripts-lint');
   });
 });
-
+gulp.task('styles-lint', function() {
+  return gulp.src(config.lintSassFilesMask)
+    .pipe(scsslint());
+});
 // Styles
-gulp.task('styles', function () {
-
-
-    return gulp.src('sass/*.scss')
-      .pipe(scsslint())
-      .pipe(sourcemaps.init())
+gulp.task('styles', function() {
+    return gulp.src(config.compileSassFilesMask)
       .pipe(sass().on('error', sass.logError))
+      .pipe(sourcemaps.init({loadMaps: true}))
       .pipe(autoprefixer('last 2 version'))
-      .pipe(gulp.dest('../dist/styles'))
+      .pipe(sourcemaps.write())
+      .pipe(gulp.dest(config.stylesOutputDir))
+      .pipe(browserSync.stream())
+      .pipe(reload({ stream: true }))
+      // minify
       .pipe(rename({suffix: '.min'}))
       .pipe(minifycss())
-      .pipe(sourcemaps.write())
-      .pipe(gulp.dest('../dist/styles'))
-      .pipe(browserSync.stream());
+      .pipe(gulp.dest(config.stylesOutputDir))
+      .pipe(browserSync.stream())
+      .pipe(reload({ stream: true }));
 
 });
 
@@ -137,45 +163,49 @@ gulp.task('scripts-lint', function() {
 
 // Libraries - scripts
 gulp.task('libs-scripts', function() {
-    return gulp.src('libs/*.js')
+    return gulp.src(config.libsJsFilesMask)
         .pipe(sourcemaps.init({loadMaps: true}))
-        .pipe(concat('libs.js'))
+        .pipe(concat(config.libsOutputJsFile))
         .pipe(sourcemaps.write())
-        .pipe(gulp.dest('../dist/scripts'))
+        .pipe(gulp.dest(config.scriptsOutputDir))
+        .pipe(browserSync.stream())
+        .pipe(reload({ stream: true }))
+        // minify
         .pipe(buffer())
         .pipe(uglify())
-        .pipe(gulp.dest(config.outputDir+'min/'))
-        .pipe(browserSync.stream());
+        .pipe(rename({suffix: '.min'}))
+        .pipe(gulp.dest(config.scriptsOutputDir))
+        .pipe(browserSync.stream())
+        .pipe(reload({ stream: true }));
 });
 
 gulp.task('libs-styles', function() {
-    return gulp.src('libs/*.css')
-        .pipe(concat('libs.css'))
+    return gulp.src(config.libsCssFilesMask)
+        .pipe(sourcemaps.init())
+        .pipe(concat(config.libsOutputCssFile))
+        .pipe(sourcemaps.write())
+        .pipe(gulp.dest(config.stylesOutputDir))
+        .pipe(browserSync.stream())
+        .pipe(reload({ stream: true }))
+        // minify
         .pipe(rename({ suffix: '.min' }))
         .pipe(minifycss())
-        .pipe(gulp.dest('../dist/styles'))
-        .pipe(browserSync.stream());
+        .pipe(gulp.dest(config.stylesOutputDir))
+        .pipe(browserSync.stream())
+        .pipe(reload({ stream: true }));
 });
 
 // Images
 gulp.task('images', function() {
-    return gulp.src('images/*')
+    return gulp.src(config.imagesMask)
         .pipe(cache(imagemin({ optimizationLevel: 3, progressive: true, interlaced: true })))
-        .pipe(gulp.dest('../dist/images'))
+        .pipe(gulp.dest(config.imagesOutputDir))
         .pipe(browserSync.stream());
 });
 
-// Clean
-gulp.task('clean', function(cb) {
-  rimraf('../dist/styles', function() {
-    rimraf('../dist/images', function() {
-      rimraf('../dist/scripts', cb);
-    });
-  });
-});
 
 // Default task
 gulp.task('default', ['clean'], function() {
-    gulp.start('styles', 'build', 'images', 'libs-styles', 'libs-scripts');
+    gulp.start('styles', 'build-persistent', 'images', 'libs-styles', 'libs-scripts', 'scripts-lint', 'styles-lint');
 });
 

@@ -1,21 +1,28 @@
-import {ModalNotifier} from './notifiers/ModalNotifier.js';
-
 class Yii2AdminApplication {
   constructor() {
     if (typeof(polyglot) === 'undefined') {
-      const warningMessage = 'You MUST setup and configure devgroup/yii2-polyglot.';
-      /*eslint-disable */
-      if (typeof(console) !== 'undefined') {
-        console.warn(warningMessage);
-      } else if (typeof(alert) === 'function') {
-        alert(warningMessage);
-      }
-      /*eslint-enable */
+      Yii2AdminApplication.warn('You MUST setup and configure devgroup/yii2-polyglot.');
+    }
+
+    if (typeof(global.monster) === 'undefined') {
+      Yii2AdminApplication.warn('You MUST setup frontend-monster.');
+    } else {
+      this.monster = global.monster;
     }
   }
 
-  static modalNotifier(message, criticalLevel) {
-    return new ModalNotifier(message, criticalLevel);
+  static warn(warningMessage) {
+    /*eslint-disable */
+    if (typeof(console) !== 'undefined') {
+      console.warn(warningMessage);
+    } else if (typeof(alert) === 'function') {
+      alert(warningMessage);
+    }
+    /*eslint-enable */
+  }
+
+  modalNotifier(message, criticalLevel) {
+    return this.monster.showModalNotifier(message, criticalLevel);
   }
 }
 
