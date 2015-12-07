@@ -2,6 +2,7 @@
 
 namespace DevGroup\AdminUtils\controllers;
 
+use DevGroup\Frontend\assets\FrontendMonster;
 use Yii;
 use yii\web\Controller;
 
@@ -20,5 +21,9 @@ class BaseController extends Controller
         parent::init();
         // switch layout to admin or developer-defined in params
         $this->layout = isset(Yii::$app->params['admin.layout']) ? Yii::$app->params['admin.layout'] : '@app/views/layouts/admin';
+
+        // register frontend monster
+        FrontendMonster::register($this->view);
+
     }
 }
