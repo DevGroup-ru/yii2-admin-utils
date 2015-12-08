@@ -1,3 +1,5 @@
+import {BaseAction} from './actions/BaseAction';
+
 class Yii2AdminApplication {
   constructor() {
     if (typeof(polyglot) === 'undefined') {
@@ -9,6 +11,18 @@ class Yii2AdminApplication {
     } else {
       this.monster = global.monster;
     }
+    this.bindHelpers();
+  }
+
+  bindHelpers() {
+    $('body').on('click', '[data-admin-url]', function clickHandler() {
+      const element = $(this);
+      const endpoint = element.data('adminUrl');
+
+      const action = new BaseAction(endpoint);
+      action.run([]);
+      return false;
+    });
   }
 
   static warn(warningMessage) {

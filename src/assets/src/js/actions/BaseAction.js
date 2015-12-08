@@ -9,15 +9,24 @@ class BaseAction {
   run(params) {
     return this.ajaxCall(
       params,
-      function success() {
+      function success(data) {
         // do something usefull with data
+        console.log('do something usefull with data');
+        console.log(data);
 
+
+        if (data.notifications.length > 0) {
+          for (const notification of data.notifications) {
+            console.log(notification);
+            global.monster.showBootstrapBoxNotifier(notification.message, notification.criticalLevel);
+          }
+        }
       }
     );
   }
 
   static showErrorMessage(message) {
-    return Yii2AdminApplication.modalNotifier(message, 'error');
+    return global.monster.modalNotifier(message, 'error');
   }
 
   ajaxCall(params, callback) {
