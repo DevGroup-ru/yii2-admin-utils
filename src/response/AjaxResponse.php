@@ -1,6 +1,6 @@
 <?php
 
-namespace DevGroup\AdminUtils\structures;
+namespace DevGroup\AdminUtils\response;
 
 use yii\base\Object;
 
@@ -12,11 +12,14 @@ class AjaxResponse extends Object
     /** @var bool Flag if there's some critical error */
     public $error = false;
 
-    /** @var Notification[] Notifications that should be sent with this response */
+    /** @var array Notifications that should be sent with this response */
     public $notifications = [];
 
     /** @var int Server timestamp */
     public $responseTime = 0;
+
+    /** @var bool Flag showing if action is ended and user can be redirected back */
+    public $actionEnded = false;
 
     public function __construct($content, $error = false, $notifications = [], $config = [])
     {

@@ -121,6 +121,7 @@ gulp.task('watch', ['default'], function() {
   gulp.watch(config.libsCssFilesMask, ['libs-styles']);
   gulp.watch(config.lintSassFilesMask, ['styles-lint']);
   gulp.watch(config.imagesMask, ['images']);
+  gulp.watch(config.watchJsFilesMask, ['build-persistent']);
   getBundler().on('update', function() {
     console.log('update event');
     gulp.start('build-persistent');

@@ -1,0 +1,10 @@
+.nav-tabs-custom__footer {
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 3px;
+  border-bottom-left-radius: 3px;
+  border-top: 1px solid #f4f4f4;
+  padding: 10px;
+  background-color: #fff; }
+
+/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbImFkbWluLWx0ZS1hZGRvbnMuY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBO0VBQ0UsMEJBQTBCO0VBQzFCLDJCQUEyQjtFQUMzQixnQ0FBZ0M7RUFDaEMsK0JBQStCO0VBQy9CLDhCQUE4QjtFQUM5QixjQUFjO0VBQ2QsdUJBQXVCLEVBQUUiLCJmaWxlIjoiYWRtaW4tbHRlLWFkZG9ucy5jc3MiLCJzb3VyY2VzQ29udGVudCI6WyIubmF2LXRhYnMtY3VzdG9tX19mb290ZXIge1xuICBib3JkZXItdG9wLWxlZnQtcmFkaXVzOiAwO1xuICBib3JkZXItdG9wLXJpZ2h0LXJhZGl1czogMDtcbiAgYm9yZGVyLWJvdHRvbS1yaWdodC1yYWRpdXM6IDNweDtcbiAgYm9yZGVyLWJvdHRvbS1sZWZ0LXJhZGl1czogM3B4O1xuICBib3JkZXItdG9wOiAxcHggc29saWQgI2Y0ZjRmNDtcbiAgcGFkZGluZzogMTBweDtcbiAgYmFja2dyb3VuZC1jb2xvcjogI2ZmZjsgfVxuIl0sInNvdXJjZVJvb3QiOiIvc291cmNlLyJ9 */

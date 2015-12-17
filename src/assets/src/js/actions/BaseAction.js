@@ -1,45 +1,54 @@
-import {Yii2AdminApplication} from '../Yii2AdminApplication';
-
 class BaseAction {
   constructor(endpoint) {
     this.endpoint = endpoint;
     this.method = 'POST';
+    this.monsterErrorNotifierFunction = 'modalNotifier';
   }
 
-  run(params) {
+  static instance(...rest) {
+    return new this(...rest);
+  }
+
+  run(params, successCallback, errorCallback) {
     return this.ajaxCall(
       params,
       function success(data) {
-        // do something usefull with data
-        console.log('do something usefull with data');
-        console.log(data);
-
-
+        // show all notifications from backend
         if (data.notifications.length > 0) {
           for (const notification of data.notifications) {
-            console.log(notification);
             global.monster.showBootstrapBoxNotifier(notification.message, notification.criticalLevel);
+          }
+        }
+        // call corresponding callback
+        if (data.error === false) {
+          if (successCallback !== null) {
+            successCallback(data.content);
+          }
+        } else {
+          if (errorCallback !== null) {
+            errorCallback(data);
           }
         }
       }
     );
   }
 
-  static showErrorMessage(message) {
-    return global.monster.modalNotifier(message, 'error');
+  showErrorMessage(message) {
+    return global.monster[this.monsterErrorNotifierFunction](message, 'error');
   }
 
-  ajaxCall(params, callback) {
+  ajaxCall(params, successCallback, errorCallback) {
     return $.ajax(
       {
         url: this.endpoint,
         method: this.method,
         data: params,
         success: function success(data) {
-          callback(data);
+          successCallback(data);
         },
         error: function error(jqXHR, textStatus, errorThrown) {
-          BaseAction.showErrorMessage(errorThrown);
+          this.showErrorMessage(errorThrown);
+          errorCallback([], jqXHR, textStatus, errorThrown);
         },
       }
     );

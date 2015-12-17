@@ -2,11 +2,10 @@
 
 namespace DevGroup\AdminUtils\traits;
 
-use DevGroup\AdminUtils\structures\AjaxResponse;
-use DevGroup\AdminUtils\structures\Notification;
+use DevGroup\AdminUtils\response\AjaxResponse;
 use Yii;
+use yii\base\Action;
 use yii\web\Response;
-
 
 /**
  * Class AdminResponse
@@ -15,45 +14,43 @@ use yii\web\Response;
  * @method string renderAjax($view, array $params)
  * @method string render($view, array $params)
  */
-trait AdminResponse {
-    /** @var \DevGroup\AdminUtils\structures\Notification[] Notifications that should be sent with this response */
-    public $notifications = [];
-
+trait AdminResponse
+{
     /**
      * Generates response for current request based on it's type
      *
      * @param string $view
      * @param array  $params
      *
-     * @return \DevGroup\AdminUtils\structures\AjaxResponse|string
+     * @return \DevGroup\AdminUtils\response\AjaxResponse|string
      */
     public function renderResponse($view, $params = [])
     {
         /** @var \DevGroup\AdminUtils\controllers\BaseController $context */
-        $context = $this instanceof \yii\base\Action ? $this->controller : $this;
+        $context = $this instanceof Action ? $this->controller : $this;
         if (Yii::$app->request->isAjax === true) {
             Yii::$app->response->format = Response::FORMAT_JSON;
 
             $content = $context->renderAjax($view, $params);
-            return new AjaxResponse($content, false, $this->notifications);
+            return new AjaxResponse($content, false, Yii::$app->session->getAllFlashes(true));
         } else {
-            foreach ($this->notifications as $notification) {
-                Yii::$app->session->setFlash($notification->flashKey(), $notification->message);
-            }
             return $context->render($view, $params);
         }
     }
 
-    /**
-     * Notify user of something.
-     * You should use this function instead of `Yii::$app->session->setFlash`
-     *
-     * @param     $message
-     * @param int $criticalLevel
-     */
-    public function notify($message, $criticalLevel = Notification::LEVEL_SUCCESS)
+    public function endAction($defaultReturnUrl = '')
     {
-        $context = $this instanceof \yii\base\Action ? $this->controller : $this;
-        $context->notifications[] = new Notification($message, $criticalLevel);
+        /** @var \DevGroup\AdminUtils\controllers\BaseController $context */
+        $context = $this instanceof Action ? $this->controller : $this;
+        if (Yii::$app->request->isAjax === true) {
+            Yii::$app->response->format = Response::FORMAT_JSON;
+            $content = '';
+            $response = new AjaxResponse($content, false, Yii::$app->session->getAllFlashes(true));
+            $response->actionEnded = true;
+            return $response;
+        } else {
+            $returnUrl = Yii::$app->request->get('returnUrl', $defaultReturnUrl);
+            return $context->redirect($returnUrl);
+        }
     }
 }

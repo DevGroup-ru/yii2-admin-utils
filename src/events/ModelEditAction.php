@@ -36,11 +36,4 @@ class ModelEditAction extends Event
         $this->model = $model;
     }
 
-    /**
-     * @return \yii\web\Controller
-     */
-    public function getController()
-    {
-        return $this->sender;
-    }
 }

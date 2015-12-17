@@ -1,4 +1,5 @@
 import {BaseAction} from './actions/BaseAction';
+import {ModalDialog} from './actions/ModalDialog';
 
 class Yii2AdminApplication {
   constructor() {
@@ -15,12 +16,16 @@ class Yii2AdminApplication {
   }
 
   bindHelpers() {
-    $('body').on('click', '[data-admin-url]', function clickHandler() {
+    $('body').on('click', '[data-admin-action]', function clickHandler() {
       const element = $(this);
-      const endpoint = element.data('adminUrl');
-
-      const action = new BaseAction(endpoint);
-      action.run([]);
+      const actionType = element.data('adminAction');
+      if (actionType === 'ModalDialog') {
+        ModalDialog.instance(element);
+      } else {
+        const endpoint = element.attr('href') || element.closest('form').attr('action');
+        const action = new BaseAction(endpoint);
+        action.run([]);
+      }
       return false;
     });
   }

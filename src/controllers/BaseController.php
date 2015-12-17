@@ -23,7 +23,7 @@ class BaseController extends FrontendController
     public function init()
     {
         parent::init();
-        $this->on(FrontendController::EVENT_BEFORE_RENDER, function() {
+        $this->on(FrontendController::EVENT_BEFORE_ACTION, function() {
             // switch layout to admin or developer-defined in params
             $this->layout = isset(Yii::$app->params['admin.layout'])
                 ? Yii::$app->params['admin.layout']

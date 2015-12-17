@@ -24,10 +24,9 @@ class Helper
     {
         if (self::$returnUrl === null) {
             $url = ['/' . ltrim(Yii::$app->requestedRoute, '/')];
-            foreach (Yii::$app->requestedParams as $key => $value) {
+            foreach (Yii::$app->request->queryParams as $key => $value) {
                 $url[$key] = $value;
             }
-
             self::$returnUrl = Url::to($url);
 
         }
