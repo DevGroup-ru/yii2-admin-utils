@@ -20,6 +20,9 @@ abstract class CombinedAction extends Action
 
     const ACTION_RUN_ALL_PARTS = 'all-parts';
 
+    const TYPE_BOX = 'box';
+    const TYPE_PLAIN = 'plain';
+
     public $parts = null;
 
     public function defineParts()
@@ -38,6 +41,11 @@ abstract class CombinedAction extends Action
         $this->beforeActionRun();
 
         $this->parts = $this->defineParts();
+        foreach ($this->parts as &$part) {
+            if (!isset($part['type'])) {
+                $part['type'] = self::TYPE_BOX;
+            }
+        }
 
         $this->controller->getView()->title = $this->title();
         $this->controller->getView()->params['breadcrumbs'] = $this->breadcrumbs();
@@ -52,8 +60,6 @@ abstract class CombinedAction extends Action
         }
         $actionsOutput = [];
 
-        $params = ArrayHelper::merge([&$this], Yii::$app->requestedParams);
-
         foreach ($actionsToRun as $name => $actionConfig) {
             if (!isset($actionConfig['function'])) {
                 $actionConfig['result'] = 'dummy';
@@ -61,7 +67,7 @@ abstract class CombinedAction extends Action
             } else {
                 $action = $actionConfig['function'];
                 $callable = is_array($action) ? $action : [$this, $action];
-                $result = call_user_func_array($callable, $params);
+                $result = call_user_func_array($callable, Yii::$app->requestedParams);
                 if ($result instanceof Response) {
                     // some part returned exact Response - handle it immediately
                     return $result;
@@ -144,7 +150,13 @@ abstract class CombinedAction extends Action
             $part['type'] = 'box';
         }
         switch ($part['type']) {
-            case 'box':
+            case self::TYPE_PLAIN:
+                return $view->render('_plain', [
+                    'part' => $part,
+                    'key' => $key,
+                    'actionBem' => $actionBem,
+                ]);
+            case self::TYPE_BOX:
             default:
                 return $view->render('_box', [
                     'part' => $part,

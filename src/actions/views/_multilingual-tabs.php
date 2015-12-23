@@ -2,6 +2,7 @@
 /** @var string $actionBem */
 /** @var string $key */
 /** @var array  $part */
+/** @var \yii\db\ActiveRecord $model */
 $label = '';
 
 if (isset($part['icon'])) {

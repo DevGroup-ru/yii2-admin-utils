@@ -7,33 +7,10 @@ use yii\bootstrap\ActiveForm;
 use yii\helpers\Html;
 use yii\web\View;
 
-abstract class FormCombinedAction extends CombinedAction
+abstract class TabbedFormCombinedAction extends FormCombinedAction
 {
-    /** @var \yii\db\ActiveRecord */
-    public $model = null;
-
-    public $formOptions = [
-        'layout' => 'horizontal',
-    ];
-    /**
-     * @var ActiveForm
-     */
-    protected $form = null;
-    protected $formStartCode = '';
-
-    const TYPE_MULTILINGUAL_TABS = 'multilingual-tabs';
-
-    public function beforeActionRun()
-    {
-        ob_start();
-        ob_implicit_flush(false);
-        $this->form = ActiveForm::begin($this->formOptions);
-        $this->formStartCode = ob_get_contents();
-
-        ob_end_clean();
-
-        parent::beforeActionRun();
-    }
+    const TYPE_TABS = 'tabs';
+    const TYPE_TABS_LINKS = 'tabs-links';
 
     public function renderActionsOutput($actionsOutput)
     {
@@ -48,27 +25,12 @@ abstract class FormCombinedAction extends CombinedAction
         }
 
         return $controller->renderResponse(
-            '@adminUtils/actions/views/form-combined-action.php',
+            '@adminUtils/actions/views/tabbed-form-combined-action.php',
             [
                 'actionsOutput' => $actionsOutput,
                 'formStartCode' => $this->formStartCode,
                 'form' => $this->form,
                 'combinedAction' => $this,
-            ]
-        );
-    }
-
-    public function getFooter()
-    {
-        return Html::submitButton(
-            '<i class="fa fa-floppy-o"></i>&nbsp;' .
-            (
-            $this->model->isNewRecord ? Yii::t('app', 'Create') : Yii::t('app', 'Save')
-            ),
-            [
-                'class' => $this->model->isNewRecord
-                    ? 'btn btn-success'
-                    : 'btn btn-primary'
             ]
         );
     }
@@ -81,9 +43,20 @@ abstract class FormCombinedAction extends CombinedAction
             $part['type'] = 'box';
         }
         switch ($part['type']) {
-            case self::TYPE_MULTILINGUAL_TABS:
+            case self::TYPE_TABS:
                 return $view->render(
-                    '_multilingual-tabs',
+                    '_tabbed-form-tabs',
+                    [
+                        'part' => $part,
+                        'key' => $key,
+                        'actionBem' => $actionBem,
+                        'form' => $this->form,
+                        'model' => $this->model,
+                    ]
+                );
+            case self::TYPE_TABS_LINKS:
+                return $view->render(
+                    '_tabbed-form-tabs-links',
                     [
                         'part' => $part,
                         'key' => $key,
