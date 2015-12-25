@@ -25,7 +25,7 @@ abstract class CombinedAction extends Action
 
     public $parts = null;
 
-    public $defaultAction = self::ACTION_RUN_ALL_PARTS;
+    public $defaultActionType = self::ACTION_RUN_ALL_PARTS;
 
     public function defineParts()
     {
@@ -52,7 +52,7 @@ abstract class CombinedAction extends Action
         $this->controller->getView()->title = $this->title();
         $this->controller->getView()->params['breadcrumbs'] = $this->breadcrumbs();
 
-        $actionType = $this->getRequestParam('action', $this->defaultAction);
+        $actionType = $this->getRequestParam('action', $this->defaultActionType);
         if ($actionType === self::ACTION_RUN_ALL_PARTS) {
             $actionsToRun = $this->parts;
         } elseif (isset($this->parts[$actionType])) {
