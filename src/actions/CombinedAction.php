@@ -55,10 +55,16 @@ abstract class CombinedAction extends Action
         $actionType = $this->getRequestParam('action', $this->defaultActionType);
         if ($actionType === self::ACTION_RUN_ALL_PARTS) {
             $actionsToRun = $this->parts;
-        } elseif (isset($this->parts[$actionType])) {
-            $actionsToRun = [$actionType => $this->parts[$actionType]];
         } else {
-            throw new ActionError("No available action for run $actionType");
+            $actionType = (array) $actionType;
+            $actionsToRun = [];
+            foreach ($actionType as $partName) {
+                if (isset($this->parts[$partName])) {
+                    $actionsToRun[$partName] = $this->parts[$partName];
+                } else {
+                    throw new ActionError("No available action for run $partName");
+                }
+            }
         }
         $actionsOutput = [];
 
