@@ -80,6 +80,10 @@ abstract class CombinedAction extends Action
                     // some part returned exact Response - handle it immediately
                     return $result;
                 }
+                if (Yii::$app->response->format !== Response::FORMAT_HTML) {
+                    // if this function changed response format - return it immidiatly
+                    return $result;
+                }
                 $actionConfig['result'] = $result;
                 $actionsOutput[$name] = $actionConfig;
             }

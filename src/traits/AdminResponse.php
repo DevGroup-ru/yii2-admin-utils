@@ -11,8 +11,8 @@ use yii\web\Response;
  * Class AdminResponse
  *
  * @package DevGroup\AdminUtils\traits
- * @method string renderAjax($view, array $params)
- * @method string render($view, array $params)
+ * @method string renderAjax($view, $params=[])
+ * @method string render($view, $params=[])
  */
 trait AdminResponse
 {
