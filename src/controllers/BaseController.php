@@ -30,8 +30,9 @@ class BaseController extends FrontendController
                 : '@app/views/layouts/admin';
 
             // register frontend monster
-            FrontendMonster::register($this->view);
             AdminBundle::register($this->view);
+
+            return true;
         });
     }
 
