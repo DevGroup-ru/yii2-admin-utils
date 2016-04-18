@@ -22,6 +22,5 @@ class AdminBundle extends AssetBundle
 
     public $depends = [
         'yii\bootstrap\BootstrapAsset',
-        'dmstr\web\AdminLteAsset',
     ];
 }
