@@ -1,5 +1,7 @@
 import {BaseAction} from './actions/BaseAction';
 import {ModalDialog} from './actions/ModalDialog';
+import {DeleteConfirmation} from './confirmations/DeleteConfirmation';
+
 
 class Yii2AdminApplication {
   constructor() {
@@ -25,6 +27,14 @@ class Yii2AdminApplication {
         const endpoint = element.attr('href') || element.closest('form').attr('action');
         const action = new BaseAction(endpoint);
         action.run([]);
+      }
+      return false;
+    });
+
+    $('body').on('click', '[data-action]', function(){
+      if($(this).data('action') === 'delete'){
+        let {title="Delete item?", text="Are you sure you want to delete this item?", close="close"} = $(this).data();
+        DeleteConfirmation.instance($(this), title, text, close);
       }
       return false;
     });
