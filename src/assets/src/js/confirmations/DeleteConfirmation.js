@@ -1,7 +1,7 @@
 import {BaseConfirmation} from './BaseConfirmation';
 
 class DeleteConfirmation extends BaseConfirmation {
-    constructor(element, title="Delete item?", text="Are you sure you want to delete this item?", close="close") {
+    constructor(element, title="Delete item?", text="Are you sure you want to delete this item?", close="Close") {
         super(element, title, text, close);
         this.href = element.attr('href');
     }

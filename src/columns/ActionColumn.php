@@ -2,6 +2,7 @@
 
 namespace DevGroup\AdminUtils\columns;
 
+use DevGroup\AdminUtils\AdminModule;
 use DevGroup\AdminUtils\Helper;
 use kartik\icons\Icon;
 use Yii;
@@ -17,7 +18,7 @@ use yii\helpers\Url;
  */
 class ActionColumn extends Column
 {
-    public $buttons;
+    public $buttons = [];
 
     private $defaultButtons = [];
 
@@ -39,22 +40,38 @@ class ActionColumn extends Column
                 'url' => 'edit',
                 'icon' => 'pencil',
                 'class' => 'btn-primary',
-                'label' => Yii::t('app', 'Edit'),
+                'label' => AdminModule::t('app', 'Edit'),
             ],
             'delete' => [
                 'url' => 'delete',
                 'icon' => 'trash-o',
                 'class' => 'btn-danger',
-                'label' => Yii::t('app', 'Delete'),
+                'label' => AdminModule::t('app', 'Delete'),
                 'options' => [
-                    'data-action' => 'delete',
+                    'data-action' => 'delete'
                 ],
             ],
         ];
 
 
-        if (null === $this->buttons) {
+        if (empty($this->buttons) === true) {
             $this->buttons = $this->defaultButtons;
+        }
+
+        if (isset($this->buttons['delete']) === true &&
+            ArrayHelper::getValue($this->buttons, 'delete.options.data-action') === 'delete'
+        ) {
+            $this->buttons['delete'] = ArrayHelper::merge(
+                [
+                    'options' => [
+                        'data-title' => AdminModule::t('app', 'Delete'),
+                        'data-close' => AdminModule::t('app', 'Close'),
+                        'data-text' => AdminModule::t('app', 'Are you sure you want to delete this item?')
+                    ]
+                ],
+                $this->buttons['delete']
+            );
+
         }
     }
 
@@ -62,13 +79,13 @@ class ActionColumn extends Column
      * Creates a URL for the given action and model.
      * This method is called for each button and each row.
      *
-     * @param string               $action          the button name (or action ID)
-     * @param \yii\db\ActiveRecord $model           the data model
-     * @param mixed                $key             the key associated with the data model
-     * @param bool                 $appendReturnUrl custom return url for each button
-     * @param array                $urlAppend       custom append url for each button
-     * @param string               $keyParam        custom param if $key is string
-     * @param array                $attrs           list of model attributes used in route params
+     * @param string $action the button name (or action ID)
+     * @param \yii\db\ActiveRecord $model the data model
+     * @param mixed $key the key associated with the data model
+     * @param bool $appendReturnUrl custom return url for each button
+     * @param array $urlAppend custom append url for each button
+     * @param string $keyParam custom param if $key is string
+     * @param array $attrs list of model attributes used in route params
      *
      * @return string the created URL
      */
@@ -87,7 +104,7 @@ class ActionColumn extends Column
             $params = $key;
         } else {
             if (is_null($keyParam) === false) {
-                $params = [$keyParam => (string) $key];
+                $params = [$keyParam => (string)$key];
             }
         }
         $params[0] = $action;
@@ -112,7 +129,7 @@ class ActionColumn extends Column
      *
      * @param mixed $model
      * @param mixed $key
-     * @param int   $index
+     * @param int $index
      *
      * @return string
      */
@@ -135,24 +152,24 @@ class ActionColumn extends Column
             }
 
             $data .= Html::a(
-                $icon . $buttonText,
-                $this->createUrl(
-                    $button['url'],
-                    $model,
-                    $key,
-                    $appendReturnUrl,
-                    $urlAppend,
-                    $keyParam,
-                    $attrs
-                ),
-                ArrayHelper::merge(
-                    isset($button['options']) ? $button['options'] : [],
-                    [
-                        'class' => $button['class'],
-                        'title' => $button['label'],
-                    ]
-                )
-            ) . ' ';
+                    $icon . $buttonText,
+                    $this->createUrl(
+                        $button['url'],
+                        $model,
+                        $key,
+                        $appendReturnUrl,
+                        $urlAppend,
+                        $keyParam,
+                        $attrs
+                    ),
+                    ArrayHelper::merge(
+                        isset($button['options']) ? $button['options'] : [],
+                        [
+                            'class' => $button['class'],
+                            'title' => $button['label'],
+                        ]
+                    )
+                ) . ' ';
         }
         $data .= '</div>';
         return $data;

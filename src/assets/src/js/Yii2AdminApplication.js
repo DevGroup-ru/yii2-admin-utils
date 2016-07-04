@@ -33,7 +33,7 @@ class Yii2AdminApplication {
 
     $('body').on('click', '[data-action]', function(){
       if($(this).data('action') === 'delete'){
-        let {title="Delete item?", text="Are you sure you want to delete this item?", close="close"} = $(this).data();
+        let {title="Delete item?", text="Are you sure you want to delete this item?", close="Close"} = $(this).data();
         DeleteConfirmation.instance($(this), title, text, close);
       }
       return false;

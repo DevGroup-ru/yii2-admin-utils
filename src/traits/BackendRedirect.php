@@ -2,6 +2,7 @@
 
 namespace DevGroup\AdminUtils\traits;
 
+use DevGroup\AdminUtils\AdminModule;
 use Yii;
 use yii\helpers\Url;
 
@@ -37,7 +38,7 @@ trait BackendRedirect
     ) {
         /** @var \yii\web\Controller $this */
         if ($setFlash === true) {
-            Yii::$app->session->setFlash('success', Yii::t('app', 'Object saved'));
+            Yii::$app->session->setFlash('success', AdminModule::t('app', 'Object saved'));
         } elseif (is_string($setFlash)) {
             Yii::$app->session->setFlash('success', $setFlash);
         }

@@ -38,14 +38,14 @@ class FrontendHelper
         if ($onlySaveAndBack === false) {
             $result .=
                 Html::a(
-                    Icon::show('arrow-circle-left') . '&nbsp;' . Yii::t('app', 'Back'),
+                    Icon::show('arrow-circle-left') . '&nbsp;' . AdminModule::t('app', 'Back'),
                     Yii::$app->request->get('returnUrl', [$indexAction, 'id' => $model->id]),
                     ['class' => 'btn btn-default form-action-button--back' . $buttonSizeClass]
                 );
         }
         if ($model->isNewRecord && $onlySaveAndBack === false) {
             $result .= Html::submitButton(
-                Icon::show('save') . '&nbsp;' . Yii::t('app', 'Save & Go next'),
+                Icon::show('save') . '&nbsp;' . AdminModule::t('app', 'Save & Go next'),
                 [
                     'class' => 'btn btn-success form-action-button--save-and-next' . $buttonSizeClass,
                     'name' => 'action',
@@ -55,7 +55,7 @@ class FrontendHelper
         }
         $result .=
             Html::submitButton(
-                Icon::show('save') . '&nbsp;' . Yii::t('app', 'Save & Go back'),
+                Icon::show('save') . '&nbsp;' . AdminModule::t('app', 'Save & Go back'),
                 [
                     'class' => 'btn btn-warning form-action-button--save-and-back' . $buttonSizeClass,
                     'name' => 'action',
@@ -65,7 +65,7 @@ class FrontendHelper
         if ($onlySaveAndBack === false) {
             $result .=
                 Html::submitButton(
-                    Icon::show('save') . '&nbsp;' . Yii::t('app', 'Save'),
+                    Icon::show('save') . '&nbsp;' . AdminModule::t('app', 'Save'),
                     [
                         'class' => 'btn btn-primary form-action-button--save' . $buttonSizeClass,
                         'name' => 'action',

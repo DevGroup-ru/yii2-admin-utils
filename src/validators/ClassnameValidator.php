@@ -2,6 +2,7 @@
 
 namespace DevGroup\AdminUtils\validators;
 
+use DevGroup\AdminUtils\AdminModule;
 use Yii;
 use yii\validators\Validator;
 
@@ -35,7 +36,7 @@ class ClassnameValidator extends Validator
     {
         if (class_exists($value) === false) {
             return [
-                Yii::t('admin-utils', 'Unable to find specified class.'),
+                AdminModule::t('app', 'Unable to find specified class.'),
                 []
             ];
         } else {

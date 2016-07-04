@@ -2,6 +2,7 @@
 
 namespace DevGroup\AdminUtils\actions;
 
+use DevGroup\AdminUtils\AdminModule;
 use Yii;
 use yii\bootstrap\ActiveForm;
 use yii\helpers\Html;
@@ -63,7 +64,7 @@ abstract class FormCombinedAction extends CombinedAction
         return Html::submitButton(
             '<i class="fa fa-floppy-o"></i>&nbsp;' .
             (
-            $this->model->isNewRecord ? Yii::t('app', 'Create') : Yii::t('app', 'Save')
+            $this->model->isNewRecord ? AdminModule::t('app', 'Create') : AdminModule::t('app', 'Save')
             ),
             [
                 'class' => $this->model->isNewRecord
