@@ -58,21 +58,6 @@ class ActionColumn extends Column
             $this->buttons = $this->defaultButtons;
         }
 
-        if (isset($this->buttons['delete']) === true &&
-            ArrayHelper::getValue($this->buttons, 'delete.options.data-action') === 'delete'
-        ) {
-            $this->buttons['delete'] = ArrayHelper::merge(
-                [
-                    'options' => [
-                        'data-title' => AdminModule::t('app', 'Delete'),
-                        'data-close' => AdminModule::t('app', 'Close'),
-                        'data-text' => AdminModule::t('app', 'Are you sure you want to delete this item?')
-                    ]
-                ],
-                $this->buttons['delete']
-            );
-
-        }
     }
 
     /**
@@ -136,7 +121,30 @@ class ActionColumn extends Column
     protected function renderDataCellContent($model, $key, $index)
     {
         $data = Html::beginTag('div', ['class' => 'btn-group']);
-        foreach ($this->buttons as $button) {
+
+        if ($this->buttons instanceof \Closure) {
+            $buttons = call_user_func($this->buttons, $model, $key, $index, $this);
+        } else {
+            $buttons = $this->buttons;
+        }
+
+        foreach ($buttons as $buttonName => $button) {
+            if ($buttonName === 'delete' &&
+                ArrayHelper::getValue($button, 'options.data-action') === 'delete'
+            ) {
+                $button = ArrayHelper::merge(
+                    [
+                        'options' => [
+                            'data-title' => AdminModule::t('app', 'Delete'),
+                            'data-close' => AdminModule::t('app', 'Close'),
+                            'data-text' => AdminModule::t('app', 'Are you sure you want to delete this item?')
+                        ]
+                    ],
+                    $button
+                );
+            }
+
+
             $appendReturnUrl = ArrayHelper::getValue($button, 'appendReturnUrl', $this->appendReturnUrl);
             $urlAppend = ArrayHelper::getValue($button, 'urlAppend', $this->appendUrlParams);
             $keyParam = ArrayHelper::getValue($button, 'keyParam', 'id');
