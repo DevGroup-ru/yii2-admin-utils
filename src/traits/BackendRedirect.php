@@ -64,15 +64,7 @@ trait BackendRedirect
                 $url = $editAction;
                 $url['returnUrl'] = $returnUrl;
                 $url['id'] = $id;
-                return $this->redirect(
-                    Url::toRoute(
-                        [
-                            $editAction,
-                            'id' => $id,
-                            'returnUrl' => $returnUrl,
-                        ]
-                    )
-                );
+                return $this->redirect($url);
         }
     }
 }
