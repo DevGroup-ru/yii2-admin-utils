@@ -32,9 +32,20 @@ class Yii2AdminApplication {
     });
 
     $('body').on('click', '[data-action]', function(){
-      if($(this).data('action') === 'delete'){
-        let {title="Delete item?", text="Are you sure you want to delete this item?", close="Close"} = $(this).data();
-        DeleteConfirmation.instance($(this), title, text, close);
+      var $this = $(this);
+      switch ($this.data('action')) {
+        case 'delete':
+          let {title="Delete item?", text="Are you sure you want to delete this item?", close="Close", method="post"} =
+              $this.data();
+          DeleteConfirmation.instance($this, title, text, close, method);
+          break;
+        case 'delete-confirmation-yes':
+          if ($this.data('method').toLowerCase() === 'post') {
+            $.post($this.data('href')).done(function() {window.location.reload(true);});
+          } else {
+            window.location.href = $this.data('href');
+          }
+          break
       }
       return false;
     });
