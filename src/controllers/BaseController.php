@@ -27,7 +27,7 @@ class BaseController extends FrontendController
             // switch layout to admin or developer-defined in params
             $this->layout = isset(Yii::$app->params['admin.layout'])
                 ? Yii::$app->params['admin.layout']
-                : '@app/views/layouts/admin';
+                : '@app/views/layouts/main';
 
             // register frontend monster
             AdminBundle::register($this->view);
