@@ -49,7 +49,7 @@ abstract class FormCombinedAction extends CombinedAction
         }
 
         return $controller->renderResponse(
-            '@adminUtils/actions/views/form-combined-action.php',
+            '@DevGroup/AdminUtils/actions/views/form-combined-action.php',
             [
                 'actionsOutput' => $actionsOutput,
                 'formStartCode' => $this->formStartCode,

@@ -100,7 +100,7 @@ abstract class CombinedAction extends Action
         /** @var \DevGroup\AdminUtils\controllers\BaseController $controller */
         $controller = $this->controller;
         return $controller->renderResponse(
-            '@adminUtils/actions/views/combined-action.php',
+            '@DevGroup/AdminUtils/actions/views/combined-action.php',
             [
                 'actionsOutput' => $actionsOutput,
                 'combinedAction' => $this,

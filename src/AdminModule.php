@@ -17,7 +17,6 @@ class AdminModule extends Module implements BootstrapInterface
      */
     public function bootstrap($app)
     {
-        Yii::setAlias('@adminUtils', __DIR__);
         $this->registerTranslations();
     }
 
@@ -26,12 +25,12 @@ class AdminModule extends Module implements BootstrapInterface
      */
     public function registerTranslations()
     {
-        Yii::$app->i18n->translations['@adminUtils/*'] = [
+        Yii::$app->i18n->translations['@DevGroup/AdminUtils/*'] = [
             'class' => 'yii\i18n\PhpMessageSource',
             'sourceLanguage' => 'en-US',
-            'basePath' => '@adminUtils/translations',
+            'basePath' => '@DevGroup/AdminUtils/translations',
             'fileMap' => [
-                '@adminUtils/app' => 'app.php',
+                '@DevGroup/AdminUtils/app' => 'app.php',
             ],
 
         ];
@@ -43,6 +42,6 @@ class AdminModule extends Module implements BootstrapInterface
      */
     public static function t($category, $message, $params = [], $language = null)
     {
-        return Yii::t('@adminUtils/' . $category, $message, $params, $language);
+        return Yii::t('@DevGroup/AdminUtils/' . $category, $message, $params, $language);
     }
 }

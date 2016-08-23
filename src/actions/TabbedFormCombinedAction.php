@@ -25,7 +25,7 @@ abstract class TabbedFormCombinedAction extends FormCombinedAction
         }
 
         return $controller->renderResponse(
-            '@adminUtils/actions/views/tabbed-form-combined-action.php',
+            '@DevGroup/AdminUtils/actions/views/tabbed-form-combined-action.php',
             [
                 'actionsOutput' => $actionsOutput,
                 'formStartCode' => $this->formStartCode,
