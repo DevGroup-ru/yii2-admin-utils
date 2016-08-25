@@ -5,7 +5,6 @@ namespace DevGroup\AdminUtils\columns;
 use DevGroup\AdminUtils\AdminModule;
 use DevGroup\AdminUtils\Helper;
 use kartik\icons\Icon;
-use Yii;
 use yii\grid\Column;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
@@ -34,7 +33,6 @@ class ActionColumn extends Column
     public function init()
     {
         parent::init();
-
         $this->defaultButtons = [
             'edit' => [
                 'url' => 'edit',
@@ -52,12 +50,10 @@ class ActionColumn extends Column
                 ],
             ],
         ];
-
-
         if (empty($this->buttons) === true) {
             $this->buttons = $this->defaultButtons;
         }
-
+        $this->grid->view->registerAssetBundle('kartik\icons\FontAwesomeAsset');
     }
 
     /**
@@ -83,7 +79,6 @@ class ActionColumn extends Column
         $keyParam = 'id',
         $attrs = []
     ) {
-
         $params = [];
         if (is_array($key)) {
             $params = $key;
@@ -121,13 +116,11 @@ class ActionColumn extends Column
     protected function renderDataCellContent($model, $key, $index)
     {
         $data = Html::beginTag('div', ['class' => 'btn-group']);
-
         if ($this->buttons instanceof \Closure) {
             $buttons = call_user_func($this->buttons, $model, $key, $index, $this);
         } else {
             $buttons = $this->buttons;
         }
-
         foreach ($buttons as $buttonName => $button) {
             if ($buttonName === 'delete' &&
                 ArrayHelper::getValue($button, 'options.data-action') === 'delete'
@@ -143,41 +136,36 @@ class ActionColumn extends Column
                     $button
                 );
             }
-
-
             $appendReturnUrl = ArrayHelper::getValue($button, 'appendReturnUrl', $this->appendReturnUrl);
             $urlAppend = ArrayHelper::getValue($button, 'urlAppend', $this->appendUrlParams);
             $keyParam = ArrayHelper::getValue($button, 'keyParam', 'id');
             $attrs = ArrayHelper::getValue($button, 'attrs', []);
-
             Html::addCssClass($button, 'btn');
             Html::addCssClass($button, $this->buttonSizeClass);
-
             $buttonText = isset($button['text']) ? ' ' . $button['text'] : '';
-            $icon = empty($button['icon']) ? '' : Icon::show($button['icon']);
+            $icon = empty($button['icon']) ? '' : Icon::show($button['icon'], [], 'fa');
             if (!empty($icon) && !empty($buttonText)) {
                 $buttonText = '&nbsp;' . $buttonText;
             }
-
             $data .= Html::a(
-                    $icon . $buttonText,
-                    $this->createUrl(
-                        $button['url'],
-                        $model,
-                        $key,
-                        $appendReturnUrl,
-                        $urlAppend,
-                        $keyParam,
-                        $attrs
-                    ),
-                    ArrayHelper::merge(
-                        isset($button['options']) ? $button['options'] : [],
-                        [
-                            'class' => $button['class'],
-                            'title' => $button['label'],
-                        ]
-                    )
-                ) . ' ';
+                $icon . $buttonText,
+                $this->createUrl(
+                    $button['url'],
+                    $model,
+                    $key,
+                    $appendReturnUrl,
+                    $urlAppend,
+                    $keyParam,
+                    $attrs
+                ),
+                ArrayHelper::merge(
+                    isset($button['options']) ? $button['options'] : [],
+                    [
+                        'class' => $button['class'],
+                        'title' => $button['label'],
+                    ]
+                )
+            ) . ' ';
         }
         $data .= '</div>';
         return $data;
