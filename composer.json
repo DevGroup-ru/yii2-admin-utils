@@ -33,5 +33,8 @@
         "psr-4": {
             "DevGroup\\AdminUtils\\Tests\\": "tests/"
         }
+    },
+    "extra": {
+        "bootstrap": "DevGroup\\AdminUtils\\Bootstrap"
     }
 }
