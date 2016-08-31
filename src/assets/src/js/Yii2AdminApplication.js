@@ -41,7 +41,14 @@ class Yii2AdminApplication {
           break;
         case 'delete-confirmation-yes':
           if ($this.data('method').toLowerCase() === 'post') {
-            $.post($this.data('href')).done(function() {window.location.reload(true);});
+            $.post($this.data('href'))
+              .done(function() {
+                window.location.reload(true);
+              })
+              .error(function(error) {
+                alert(error.status + ': ' + error.statusText);
+                window.location.reload(true);
+              });
           } else {
             window.location.href = $this.data('href');
           }
