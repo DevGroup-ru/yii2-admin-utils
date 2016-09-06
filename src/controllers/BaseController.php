@@ -6,6 +6,7 @@ use DevGroup\AdminUtils\traits\AdminResponse;
 use DevGroup\AdminUtils\assets\AdminBundle;
 use DevGroup\Frontend\assets\FrontendMonster;
 use DevGroup\Frontend\controllers\FrontendController;
+use DevGroup\Frontend\traits\ContentNegotiator;
 use Yii;
 
 /**
@@ -16,6 +17,7 @@ use Yii;
 class BaseController extends FrontendController
 {
     use AdminResponse;
+    use ContentNegotiator;
 
     /**
      * Overrides default init adding some additional stuff
